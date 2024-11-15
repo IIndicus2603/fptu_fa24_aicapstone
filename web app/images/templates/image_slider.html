@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slider Ảnh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .carousel-inner {
+            position: relative;
+            width: 100%;
+        }
+
+        .carousel-control-prev, .carousel-control-next {
+            filter: invert(100%);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;  /* Ensure the buttons are above the images */
+        }
+
+        .carousel-control-prev {
+            left: 10px;
+        }
+
+        .carousel-control-next {
+            right: 10px;
+        }
+
+        .carousel-inner img {
+            width: 60%;
+            height: 500px;  /* Set the height for the images in the slider */
+            object-fit: contain;
+            margin-left: 0;
+        }
+
+        #carouselImages {
+            border: 2px dashed #007bff;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            width: 60%;
+            margin-left: 0;
+            position: relative;  /* Ensures the buttons are placed inside the drop zone */
+        }
+
+        #carouselImages.dragover {
+            background-color: #f1f1f1; /* Highlight the carousel when dragging over */
+        }
+
+        .carousel-item {
+            display: none;  /* Hide images initially in carousel */
+        }
+
+        .carousel-item.active {
+            display: block; /* Only display the active image */
+        }
+
+        /* Add styles for file input button */
+        .upload-btn {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #fileInput {
+            display: none; /* Hide the default file input button */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 class="text-center">Image</h2>
+
+    <!-- Carousel as drag-and-drop area -->
+    <div id="imageSlider" class="carousel slide mt-4" data-bs-ride="false">
+        <div class="carousel-inner" id="carouselImages">
+            {% for image in images %}
+                    <img src="{{ image.image.url }}" class="d-block w-100" alt="Image">
+                </div>
+            {% endfor %}
+            <!-- Buttons inside the carousel-inner -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#imageSlider" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#imageSlider" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Manual Upload Button -->
+    <div class="upload-btn">
+        <button class="btn btn-primary" id="uploadButton">Tải lên ảnh</button>
+        <input type="file" id="fileInput" name="image" accept="image/*">
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Function to get the CSRF token from the cookie
+        function getCSRFToken() {
+            var csrfToken = null;
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.startsWith('csrftoken=')) {
+                    csrfToken = cookie.substring('csrftoken='.length, cookie.length);
+                    break;
+                }
+            }
+            return csrfToken;
+        }
+    
+        // Handle file drop on the carousel (for drag-and-drop)
+        $('#carouselImages').on('dragover', function(e) {
+            e.preventDefault();  // Prevent default behavior to allow dropping
+            $(this).addClass('dragover');  // Add highlight style to the carousel area
+        });
+    
+        $('#carouselImages').on('dragleave', function() {
+            $(this).removeClass('dragover');  // Remove highlight when dragging out of the carousel
+        });
+    
+        // Handle file drop event
+        $('#carouselImages').on('drop', function(e) {
+            e.preventDefault();  // Prevent default behavior
+            $(this).removeClass('dragover');  // Reset highlight
+    
+            var files = e.originalEvent.dataTransfer.files;  // Get dropped files
+    
+            if (files.length > 0) {
+                uploadImage(files[0]);
+            }
+        });
+    
+        // Allow the user to click and add an image to the carousel by triggering file input
+        $('#uploadButton').on('click', function() {
+            $('#fileInput').click();
+        });
+    
+        // Handle file selection from the file input
+        $(document).on('change', '#fileInput', function() {
+            var fileInput = $(this)[0];
+            if (fileInput.files.length > 0) {
+                uploadImage(fileInput.files[0]);
+            }
+        });
+    
+        // Function to upload image
+        function uploadImage(file) {
+            // First check if file already exists (based on file name)
+            var fileName = file.name;
+    
+            $.ajax({
+                url: '{% url "image_check_duplicate" %}',  // A new URL to check if the file exists
+                type: 'POST',
+                data: {
+                    'file_name': fileName,
+                    'csrfmiddlewaretoken': getCSRFToken()  // Add CSRF token
+                },
+                success: function(response) {
+                    if (response.exists) {
+                        alert('This file already exists.');
+                        return;
+                    } else {
+                        // Proceed with uploading the image
+                        var formData = new FormData();
+                        formData.append('image', file);
+                        formData.append('csrfmiddlewaretoken', getCSRFToken());  // Add CSRF token
+    
+                        $.ajax({
+                            url: '{% url "image_upload" %}',  // The URL for image upload view
+                            type: 'POST',
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function(response) {
+                                // Add the new image to the carousel
+                                var newImage = '<div class="carousel-item"><img src="' + response.image_url + '" class="d-block w-100" alt="Image"></div>';
+                                $('#carouselImages').append(newImage);
+    
+                                // Optionally make the newly added image active
+                                $('#carouselImages .carousel-item').removeClass('active');
+                                $('#carouselImages .carousel-item:last').addClass('active');
+    
+                                // Clear the file input after the upload
+                                $('#fileInput').val('');
+                            },
+                            error: function(xhr, status, error) {
+                                alert("Lỗi khi tải ảnh lên!");
+                            }
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("Error checking if file exists!");
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
