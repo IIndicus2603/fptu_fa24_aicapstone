@@ -1,0 +1,275 @@
+1.Getting Started
+*What is computer vision?
+Computer vision is an interdisciplinary field of study that deals with enabling computers to interpret, analyze and understand visual information from the world around us, such as images and videos. The goal of computer vision is to replicate human vision and enable machines to "see" the world like humans do, and to extract useful information from visual data.
+*Where is computer vision applied?
+Computer vision has numerous applications in various fields, including but not limited to:
+Autonomous vehicles
+Healthcare
+Security and surveillance
+Manufacturing
+Retail
+What are the Challenges of Computer Vision?
+Computer vision faces numerous challenges, including:
+Variability in images
+Noise and distortion
+Lack of data.
+Interpretation of data
+Ethical concerns
+*The future of computer vision?
+The future of computer vision is promising, with advancements in deep learning and artificial intelligence leading to more accurate and efficient computer vision models. Some potential areas for growth include:
+Improved accuracy
+Real-time applications
+Augmented and virtual reality
+Robotics
+Ethical considerations
+2.Geometric primitives and transformations
+*What are basic geometric primitives: points, lines, and planes?
+Basic geometric primitives are the fundamental building blocks of geometric objects. They include:
+Points: Zero-dimensional objects with no length, width, or height. They are used to represent locations in space.
+Lines: One-dimensional objects that extend infinitely in two directions. They are used to represent a straight path between two points.
+Planes: Two-dimensional objects that extend infinitely in all directions. They are used to represent a flat surface.
+*What is 2D, 3D geometric?
+2D geometry deals with objects that have only two dimensions, such as length and width. Examples include flat shapes such as triangles, squares, and circles. 3D geometry deals with objects that have three dimensions, such as length, width, and height. Examples include objects with volume, such as cubes, spheres, and pyramids.
+*List the geometric transformations?
+Geometric transformations are operations that change the position, size, or orientation of geometric objects. Some common geometric transformations include:
+Translation: Moving an object in a certain direction.
+Rotation: Turning an object around a fixed point.
+Scaling: Changing the size of an object.
+Reflection: Flipping an object over a line or plane.
+Shearing: Distorting an object by shifting one side relative to the other.
+*What are lens distortions?
+Lens distortions refer to the warping of images due to imperfections in camera lenses. These distortions can include:
+Radial distortion: Warping of straight lines near the edges of an image.
+Tangential distortion: Warping of straight lines away from the center of the image.
+Chromatic aberration: Color fringing or blurring around edges of an image.
+3.Photometric image formation
+
+*Present the effect of illumination and light source?
+Illumination and light sources have a significant impact on how we perceive images. The angle and intensity of light sources can change how objects appear in an image, creating shadows, highlights, and reflections. Illumination can also impact the color and texture of objects, making them appear brighter or darker.
+
+*What are the reflectance and shading models?
+Reflectance models are used to describe how light interacts with surfaces. They calculate how much light is reflected off an object, and how the angle of incidence affects the reflection. Shading models are used to calculate how light and shadow are represented in an image. They take into account factors such as the angle of light, surface orientation, and surface roughness.
+
+*What is the pinhole model?
+The pinhole model is a simple mathematical model used in computer vision to describe the relationship between a camera and an image. It assumes that light travels through a small pinhole in the camera and forms an inverted image on a plane behind the pinhole. The pinhole model helps to explain the distortion that occurs in images due to the curvature of the camera lens and other factors. It is often used as a basis for more complex camera models in computer vision.
+
+4.The Digital Camera
+*Present the construction of a camera to create digital images?
+A digital camera consists of several components, including a lens to focus light onto a sensor, a sensor to convert light into electrical signals, and an image processor to convert the electrical signals into a digital image. The lens focuses light onto the sensor, which is made up of millions of photosites that capture light and convert it into electrical signals. The image processor then takes these signals and applies various corrections and enhancements to create a digital image.
+
+*What is the difference between color systems, and color spaces?
+Color systems and color spaces are both used to describe colors, but they are different concepts. A color system is a set of rules or conventions for representing colors numerically. Examples of color systems include RGB, CMYK, and HSV. A color space, on the other hand, is a specific implementation of a color system that defines a range of colors that can be displayed or printed. Examples of color spaces include sRGB, Adobe RGB, and ProPhoto RGB.
+
+*What are image formats, compressed images?
+Image formats are file formats used to store digital images. Some common image formats include JPEG, PNG, GIF, and BMP. Each format has its own advantages and disadvantages in terms of image quality, file size, and compatibility with different software and devices.
+
+6.Image processing - Point Operators
+*Image processing is the manipulation of images using various algorithms and techniques to enhance their visual quality, extract useful information, or prepare them for further analysis.
+
+*Image Arithmetics are mathematical operations applied to images to perform operations like addition, subtraction, multiplication, and division between two or more images. The most commonly used image arithmetic operations include:
+
+Addition: Adding two or more images pixel-wise.
+Subtraction: Subtracting one image from another.
+Multiplication: Multiplying two images pixel-wise.
+Division: Dividing one image by another.
+*Operations to transform a pixel include:
+Thresholding: Assigning a value to a pixel based on whether it is above or below a certain threshold value.
+Contrast adjustment: Changing the brightness and contrast of an image by scaling the pixel values.
+Color mapping: Converting pixel values from one color space to another, such as RGB to grayscale or HSV.
+Filtering: Applying a filter to a pixel or a group of pixels to smooth or sharpen the image.
+*Color transforms involve converting an image from one color space to another. The most commonly used color spaces include:
+RGB: Red, Green, and Blue color space used in electronic displays and cameras.
+Grayscale: A single channel image where the pixel values represent the intensity of light.
+HSV: Hue, Saturation, and Value color space used in image analysis and computer vision.
+*Histogram-based image operations involve analyzing the distribution of pixel values in an image. Examples of histogram-based operations include:
+Histogram equalization: Adjusting the image to spread the pixel values evenly across the entire range.
+Thresholding: Assigning a value to a pixel based on its position in the histogram.
+Contrast stretching: Adjusting the brightness and contrast of an image by stretching the histogram.
+7. Image processing - Linear filtering
+*What is image filtering?
+Image filtering is a process of enhancing or modifying an image by applying a specific algorithm or kernel to it. The kernel is a small matrix of numbers that are applied to each pixel of the image.
+*What is the difference between linear and nonlinear filters?
+Linear filters use a kernel that is a linear combination of its neighboring pixels, whereas nonlinear filters use a kernel that is a nonlinear combination of its neighboring pixels. Linear filters are simpler and faster than nonlinear filters, but they may not be able to capture complex image features.
+*What is the difference between Correlation and Convolution?
+Correlation and convolution are two operations that are used in image filtering. Correlation is a measure of similarity between two signals, and convolution is a mathematical operation that combines two signals to produce a third signal. In image filtering, correlation and convolution are used interchangeably, but convolution is more commonly used.
+*How linear filters work and their implementation?
+Linear filters work by convolving the image with a linear kernel. The kernel is moved over the image, and at each location, the convolution operation is performed by multiplying the kernel with the corresponding pixel values in the image. This results in a new value for the pixel at the center of the kernel, and this value is stored in a new image.
+*How nonlinear filters work and their implementation?
+Nonlinear filters work by applying a nonlinear function to the neighboring pixels within a specific window. The function applied depends on the values of the neighboring pixels, and it can be used to remove noise, blur or sharpen the image, or enhance edges. Examples of nonlinear filters include median filters, max filters, and min filters. The implementation of a nonlinear filter involves applying the kernel to each pixel in the image and calculating the output value using the nonlinear function.
+
+8. Image processing - Fourier transforms
+*What is Fourier transform?
+Fourier transform is a mathematical technique that decomposes a function or a signal into its constituent frequencies. It converts a time-domain signal into a frequency-domain signal.
+*How Fourier transform is applied in image?
+Fourier transform is applied in image processing by converting the spatial-domain image into the frequency-domain image. This enables the analysis and manipulation of the image in the frequency domain, where certain operations may be more efficient. Fourier transform is applied in image processing by performing the following steps:
+Convert the image from spatial-domain to frequency-domain using Fourier transform.
+Apply the desired operation or analysis in the frequency-domain.
+Convert the frequency-domain image back to the spatial-domain using inverse Fourier transform.
+*Present applications of Fourier transform such as image filtering, image analysis, edge detection, image reconstruction, image compression?
+Fourier transform has several applications in image processing, including:
+Image filtering: Fourier transform is used to remove unwanted frequencies in the frequency-domain image, resulting in a filtered image in the spatial-domain.
+Image analysis: Fourier transform is used to analyze the frequency content of an image and extract features such as dominant frequencies, periodicity, and texture.
+Edge detection: Fourier transform is used to detect the edges in an image by analyzing the frequency content of the image.
+Image reconstruction: Fourier transform is used to reconstruct an image from its frequency-domain representation.
+Image compression: Fourier transform is used to compress an image by discarding or approximating the higher frequency components of the frequency-domain image, resulting in a compressed image with reduced file size.
+
+9. Image processing - Geometric transformations
+*What are Geometric transformations in the image domain?
+Geometric transformations in the image domain refer to the process of transforming an image by changing its geometric properties such as scale, rotation, translation, and skew. Geometric transformations are applied to images to correct distortion, align images, or change the perspective of an image.
+*Implement the Geometric transformations?
+Geometric transformations can be implemented using various methods, including:
+
+Affine transformations: These include scaling, rotation, translation, and skewing of the image. These transformations can be implemented using a transformation matrix.
+Perspective transformations: These are used to simulate the effect of viewing an object or scene from a different angle. These transformations can be implemented using homography matrices.
+*What are MIP-mapping, Elliptical Weighted Average, Anisotropic filtering, Multi-pass transforms, and Mesh-based warping?
+MIP-mapping is a technique used in computer graphics to reduce aliasing and improve the quality of texture mapping. Elliptical weighted average is a technique used to smooth images by averaging pixel values in an elliptical neighborhood. Anisotropic filtering is a technique used to filter an image in a way that preserves the directional features of the image. Multi-pass transforms involve applying multiple transformations to an image in a series of passes. Mesh-based warping involves dividing an image into a mesh of triangles or quadrilaterals and warping each mesh element to transform the image.
+
+To implement geometric transformations in an image, the following steps are typically followed:
+
+Define the transformation required for the image.
+Compute the transformation matrix or homography matrix.
+Apply the transformation matrix or homography matrix to the image using techniques such as affine or perspective transformation.
+Handle issues such as boundary conditions and interpolation of pixel values.
+11. Feature detection and matching  - Points and patches
+*What are keypoint features or interest points
+Keypoint features or interest points are specific locations in an image that are distinctive and easily recognizable. These points can be used as a reference for feature detection, matching, and tracking in image processing.
+
+*How to handle patches of pixels surrounding the point location
+When handling patches of pixels surrounding the point location, several techniques can be used to extract features, including:
+Scale-invariant feature transform (SIFT): This technique extracts features at different scales using Gaussian smoothing and difference-of-Gaussian (DoG) filtering.
+Speeded Up Robust Features (SURF): This technique uses a similar approach to SIFT but uses Haar wavelet responses instead of Gaussian filters.
+Features from Accelerated Segment Test (FAST): This technique extracts features by detecting corners using a threshold-based approach.
+Oriented FAST and Rotated BRIEF (ORB): This technique combines FAST with BRIEF (Binary Robust Independent Elementary Features) to extract features that are both fast and robust.
+*What are Feature detectors, Feature descriptors, Feature matching, Feature tracking?
+Feature detectors are algorithms that detect keypoints or interest points in an image. Feature descriptors are algorithms that extract feature descriptors or feature vectors from the detected keypoints. Feature matching involves finding correspondences between the keypoints in different images. Feature tracking involves tracking the movement of features over time.
+*List the techniques used in Feature detectors, Feature descriptors, Feature matching, Feature tracking?
+Techniques used in feature detectors, descriptors, matching, and tracking include:
+
+SIFT, SURF, FAST, and ORB for feature detection and descriptor extraction.
+Scale-space pyramid and DoG filtering for feature detection at different scales.
+RANSAC (Random Sample Consensus) and nearest-neighbor matching for feature matching.
+Lucas-Kanade and optical flow for feature tracking.
+PCA-SIFT (Principal Component Analysis-SIFT) and DAISY (Descriptor And Invariant Feature-based Synthetic representation) for feature descriptor compression and efficient storage.
+12. Feature detection and matching  - Edges
+
+*What is edge, edge detection?
+In image processing, an edge refers to a sudden change in intensity or color between adjacent pixels in an image. Edge detection is the process of identifying these edges in an image, which is often an important step in image analysis, object detection, and computer vision applications.
+
+*Present techniques used in edge detection?
+Techniques used in edge detection include:
+
+Sobel and Prewitt operators: These are gradient-based edge detection techniques that use first-order derivatives to detect edges.
+Canny edge detector: This is a popular edge detection technique that uses a multi-stage algorithm to detect edges by suppressing noise and detecting the strongest edges.
+Laplacian of Gaussian (LoG) operator: This is an edge detection technique that first applies Gaussian smoothing and then calculates the Laplacian of the image to detect edges.
+Difference of Gaussians (DoG) operator: This is a simpler version of the LoG operator that uses the difference of two Gaussian filters to detect edges.
+
+*What is Edge linking?
+Edge linking is the process of connecting the detected edges in an image to form meaningful contours or boundaries. This is typically done by applying a threshold to the edge strength values and then using a linking algorithm to connect the edge segments into larger contours or boundaries.
+
+*What are applications of edge detection?
+Applications of edge detection include:
+
+Object detection: Edge detection can be used to extract the boundaries of objects in an image, which can then be used for object recognition and tracking.
+Image segmentation: Edge detection can be used to segment an image into regions based on the detected edges, which is useful for tasks such as image classification and analysis.
+Image filtering: Edge detection can be used to filter an image by selectively removing or enhancing edges based on their characteristics, which is useful for tasks such as noise reduction and feature extraction.
+Computer vision: Edge detection is an important step in many computer vision tasks, such as stereo vision, optical flow, and shape analysis.
+13. Feature detection and matching  - Lines
+
+Feature detection and matching - Lines
+Line Detection:
+Line detection is the process of identifying straight lines in an image. It is an important step in many computer vision and image processing applications.
+
+Hough Transform:
+The Hough Transform is a feature detection algorithm used for detecting straight lines in an image. It works by converting the image space to a parameter space and then detecting straight lines as peaks in this space.
+
+Applications of convolution-based techniques in line detection:
+Convolution-based techniques, such as edge detection and gradient-based methods, are commonly used in line detection algorithms.
+
+Applications of line detection in image processing:
+Line detection has various applications in image processing, such as road detection, character recognition, and object tracking.
+
+15.Segmentation - Active contours
+Segmentation:
+Segmentation is the process of dividing an image into multiple regions or segments. It is a fundamental step in many computer vision and image processing applications.
+
+Effect of Segmentation in image processing and computer vision:
+Segmentation is an important technique in image processing and computer vision because it allows for the identification of objects or regions of interest in an image.
+
+Active contour technique:
+The active contour technique, also known as the snake algorithm, is a segmentation method that uses an energy function to deform a contour until it fits the edges of an object in the image.
+
+Techniques of active contours:
+There are several techniques for active contours, including the level set method, distance regularization, and geometric active contours.
+
+Specific applications of active contours:
+Active contours have various applications in image processing, such as medical image analysis, object tracking, and image segmentation.
+
+16.Segmentation - Split and Merge
+Segmentation techniques using the Split and merge method:
+Split and merge is a segmentation method that divides an image into regions recursively. The method starts with the whole image and splits it into smaller regions until the regions meet certain criteria.
+
+Watershed technique:
+The Watershed technique is a segmentation method that treats the image as a topographic relief and partitions it into catchment basins based on intensity gradients.
+
+Images Segmentation by Region methods: splitting, merging:
+Region-based segmentation methods, such as split and merge, divide an image into regions based on color, texture, or intensity homogeneity.
+
+Graph-based segmentation:
+Graph-based segmentation uses a graph representation to divide an image into regions based on the connectivity of pixels.
+
+Images Segmentation by Probabilistic aggregation:
+Probabilistic aggregation is a segmentation method that uses probabilistic models to group pixels based on their similarity.
+
+17.Segmentation - K-means and mixtures of Gaussians
+K-means and mixtures of Gaussians:
+K-means and mixtures of Gaussians are clustering algorithms used for image segmentation. K-means divides an image into K clusters, while mixtures of Gaussians fit a Gaussian mixture model to the image.
+
+Mean shift segmentation:
+Mean shift is a clustering algorithm that iteratively shifts each data point towards the mean of the points within a certain radius until convergence. It is commonly used for image segmentation.
+
+Applications of Segmentation in image processing:
+Segmentation has various applications in image processing, such as object detection, medical image analysis, and image recognition.
+
+19.2D and 3D feature-based alignment
+Feature-based alignment:
+Feature-based alignment is the process of aligning two images based on their corresponding features, such as corners or edges.
+
+2D alignment using least squares:
+Least squares is a common method for 2D alignment. It involves finding the transformation matrix that minimizes the distance between the corresponding features in the two images.
+
+3D alignment:
+3D alignment involves aligning two or more 3D images based on their corresponding features. It is commonly used in medical imaging and computer graphics.
+
+Applications of 2D and 3D feature-based alignment:
+Feature-based alignment has various applications
+21.1 Motion Models:
+• Image stitching is the process of combining multiple images with overlapping regions to create a larger panorama image.
+• Motion model refers to a mathematical model used to describe the motion of objects in a scene.
+• Planar perspective motion, Rotational panoramas, Gap closing, Cylindrical and spherical coordinates are examples of motion models used in image stitching.
+• Applications of motion models include panorama creation, video stabilization, and virtual reality.
+
+21.2 Global Alignment:
+• Global alignment is the process of aligning multiple images or parts of an image into a common coordinate system.
+• Bundle adjustment is a technique used in global alignment that adjusts the parameters of a 3D model to fit the observed image data.
+• Local adjustments, such as parallax removal, refer to techniques used to correct for distortion or misalignment caused by differences in perspective.
+• Panorama recognition is the process of identifying and aligning images to create a panoramic view.
+
+23.Object Detection:
+• Object detection is the process of identifying and localizing objects within an image or video.
+• Techniques used in object detection include template matching, edge detection, feature-based detection, and deep learning-based methods such as convolutional neural networks.
+• Face detection is a specific type of object detection used to identify human faces within an image or video.
+• Pedestrian detection is a specific type of object detection used to identify human pedestrians within an image or video.
+• Applications of face detection include security systems, social media tagging, and image search engines.
+• The challenge of object detection lies in accurately identifying objects within an image or video, especially in cases where objects are partially occluded or have varying appearances.
+
+24.Face Recognition:
+• Face recognition is the process of identifying individuals based on their facial features.
+• Techniques used in face recognition include feature-based detection, deep learning-based methods such as convolutional neural networks, and 3D modeling of facial features.
+• A feature of face recognition is the ability to recognize faces across different angles, lighting conditions, and facial expressions.
+• Object tracking applications of face recognition include security systems, access control, and personalization features in digital devices.
+
+25.Object Tracking:
+• Object tracking is the process of following the movement of objects in a scene over time.
+• Techniques used in object tracking include optical flow, Kalman filtering, and deep learning-based methods such as recurrent neural networks.
+• The future of object tracking includes the development of real-time tracking systems, improved accuracy, and the integration of tracking with other computer vision tasks such as object detection and recognition.
+• Object tracking applications include video surveillance, sports analysis, and robotics.
