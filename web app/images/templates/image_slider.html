@@ -83,6 +83,34 @@
             margin-top: 20px;
             text-align: left;
         }
+        .tag-wrapper {
+            display: inline-flex;
+            align-items: center;
+            position: relative; /* Tạo mối quan hệ với nút delete */
+        }
+    
+        .tag-btn {
+            cursor: pointer;
+        }
+    
+        .tag-delete-btn {
+            display: none; /* Ẩn mặc định */
+            position: absolute; /* Đặt nút vào vị trí bên cạnh */
+            right: -5px; /* Đẩy nút delete qua phải */
+            top: 5%;
+            transform: translateY(-50%);
+            z-index: 1;
+            padding: 0 5px;
+            font-size: 12px;
+            background-color: red;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    
+        .tag-wrapper:hover .tag-delete-btn {
+            display: inline-block; /* Hiển thị khi hover */
+        }
 
         #fileInput {
             display: none; /* Hide the default file input button */
@@ -188,7 +216,12 @@
                     var newTag = input.val().trim();
                     if (newTag !== '') {
                         // Replace the input field with a tag button
-                        var newTagButton = $('<button class="btn btn-sm btn-outline-primary tag-btn">' + newTag + '</button>');
+                        var newTagButton = $(`
+                        <div class="tag-wrapper d-inline-flex align-items-center">
+                            <button class="btn btn-sm btn-outline-primary tag-btn">${newTag}</button>
+                            <button class="btn btn-sm btn-danger tag-delete-btn" style="margin-left: 5px;">X</button>
+                        </div>
+                        `);                        
                         input.replaceWith(newTagButton);
     
                         // Send AJAX request to add the new tag to the server
@@ -203,35 +236,79 @@
                             },
                             success: function (response) {
                                 console.log('Tag added successfully:', response);
+                                tagButtonsContainer.append('<button class="btn btn-sm btn-outline-primary tag-add-btn" id="addTagButton">+</button>');   
+
                             },
                             error: function (xhr, status, error) {
                                 alert('Error adding tag!');
+                                tagButtonsContainer.append('<button class="btn btn-sm btn-outline-primary tag-add-btn" id="addTagButton">+</button>');   
+
                             },
                         });
                     } else {
-                        input.remove(); // Remove the input if no value was entered
+                        input.remove();
+                        tagButtonsContainer.append('<button class="btn btn-sm btn-outline-primary tag-add-btn" id="addTagButton">+</button>');   
+                        // Remove the input if no value was entered
                     }
                 }
             });
-    
+
             // Revert back to "+" button if input loses focus without entering a tag
             input.on('blur', function () {
                 input.replaceWith(addButton);
-            });
-            tagButtonsContainer.append('<button class="btn btn-sm btn-outline-primary tag-add-btn" id="addTagButton">+</button>');   
 
+            });
         });
+        
+
+        $(document).on('click', '.tag-delete-btn', function () {
+            var deleteButton = $(this); // Nút X được nhấn
+            var tagWrapper = deleteButton.closest('.tag-wrapper'); // Bao gồm cả nút tag và nút X
+            var tagText = tagWrapper.find('.tag-btn').text(); // Lấy nội dung của thẻ
+            var imageName = $('#carouselImages .carousel-item.active img').attr('src'); // Lấy tên ảnh hiện tại
+        
+            // Gửi yêu cầu AJAX để xóa thẻ trên server
+            $.ajax({
+                url: '{% url "delete_tag" %}', // URL của API xóa thẻ
+                type: 'POST',
+                data: {
+                    image_name: imageName, // Tên ảnh liên kết với thẻ
+                    current_tag: tagText, // Nội dung thẻ cần xóa
+                    csrfmiddlewaretoken: getCSRFToken()
+                },
+                success: function () {
+                    console.log(`Tag "${tagText}" deleted successfully.`);
+                    tagWrapper.remove(); // Xóa nút thẻ khỏi giao diện
+                },
+                error: function () {
+                    alert('Error deleting tag.');
+                }
+            });
+        });
+        
         // Function to render the tag buttons
         function renderTagButtons(tags) {
             var tagButtonsContainer = $('#tagButtons');
-            tagButtonsContainer.empty();  // Clear existing buttons
+            tagButtonsContainer.empty(); // Xóa các nút hiện tại
             
+            // Duyệt qua từng tag và tạo nút tag với nút X
             tags.forEach(function(tag) {
-                var tagButton = '<button class="btn btn-sm btn-outline-primary tag-btn">' + tag + '</button>';
+                // Tạo phần tử HTML cho tag và nút X
+                var tagButton = $(`
+                    <div class="tag-wrapper d-inline-flex align-items-center">
+                        <button class="btn btn-sm btn-outline-primary tag-btn">${tag}</button>
+                        <button class="btn btn-sm btn-danger tag-delete-btn" style="margin-left: 5px;">X</button>
+                    </div>
+                `);
+                
+                // Thêm vào container
                 tagButtonsContainer.append(tagButton);
             });
-            tagButtonsContainer.append('<button class="btn btn-sm btn-outline-primary tag-add-btn" id="addTagButton">+</button>');   
+        
+            // Thêm nút "+" để thêm thẻ mới
+            tagButtonsContainer.append('<button class="btn btn-sm btn-outline-primary tag-add-btn" id="addTagButton">+</button>');
         }
+        
         
         // Set the first image as active on page load and show its tags
         if ($('#carouselImages .carousel-item').length > 0) {
