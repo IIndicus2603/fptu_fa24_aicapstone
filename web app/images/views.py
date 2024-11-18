@@ -133,3 +133,46 @@ def add_tag(request):
         return JsonResponse({'success': False, 'error': 'Tag already exists'}, status=400)
 
     return JsonResponse({'success': False}, status=400)
+
+def delete_tag(request):
+    if request.method == 'POST':
+        image_name = request.POST.get('image_name')  # Tên ảnh
+        current_tag = request.POST.get('current_tag')  # Tag cần xóa
+        if not image_name or not current_tag:
+            return JsonResponse({'success': False, 'error': 'Missing data'}, status=400)
+
+        # Đường dẫn tới file tag.json
+        tag_file_path = os.path.join(settings.BASE_DIR, 'tag.json')
+
+        try:
+            # Đọc tag.json
+            with open(tag_file_path, 'r', encoding='utf-8') as f:
+                tags = json.load(f)
+        except FileNotFoundError:
+            return JsonResponse({'success': False, 'error': 'tag.json not found'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON in tag.json'}, status=500)
+
+        # Lấy tên file ảnh (chỉ lấy phần tên file, không lấy đường dẫn)
+        image_name = os.path.basename(image_name)
+
+        # Kiểm tra và xóa tag khỏi danh sách tag của ảnh
+        if image_name in tags and current_tag in tags[image_name]:
+            tags[image_name].remove(current_tag)
+
+            # Nếu danh sách tag rỗng, có thể xóa luôn mục ảnh (nếu cần)
+            if not tags[image_name]:
+                del tags[image_name]
+
+            # Ghi lại file tag.json
+            try:
+                with open(tag_file_path, 'w', encoding='utf-8') as f:
+                    json.dump(tags, f, ensure_ascii=False, indent=4)
+            except Exception as e:
+                return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+            return JsonResponse({'success': True, 'tags': tags.get(image_name, [])})
+
+        return JsonResponse({'success': False, 'error': 'Tag not found or image not found'}, status=400)
+
+    return JsonResponse({'success': False}, status=400)
