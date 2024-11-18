@@ -93,3 +93,43 @@ def update_tag(request):
 
     return JsonResponse({'success': False}, status=400)
 
+def add_tag(request):
+    if request.method == 'POST':
+        image_name = request.POST.get('image_name')  # Tên ảnh
+        new_tag = request.POST.get('new_tag')       # Tag mới
+        if not image_name or not new_tag:
+            return JsonResponse({'success': False, 'error': 'Missing data'}, status=400)
+
+        # Đường dẫn tới file tag.json
+        tag_file_path = os.path.join(settings.BASE_DIR, 'tag.json')
+
+        try:
+            # Đọc tag.json
+            with open(tag_file_path, 'r', encoding='utf-8') as f:
+                tags = json.load(f)
+        except FileNotFoundError:
+            return JsonResponse({'success': False, 'error': 'tag.json not found'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON in tag.json'}, status=500)
+
+        # Lấy tên file ảnh (chỉ lấy phần tên file, không lấy đường dẫn)
+        image_name = os.path.basename(image_name)
+
+        # Thêm tag mới vào danh sách tag của ảnh
+        if image_name not in tags:
+            tags[image_name] = []
+        if new_tag not in tags[image_name]:
+            tags[image_name].append(new_tag)
+
+            # Ghi lại file tag.json
+            try:
+                with open(tag_file_path, 'w', encoding='utf-8') as f:
+                    json.dump(tags, f, ensure_ascii=False, indent=4)
+            except Exception as e:
+                return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+            return JsonResponse({'success': True, 'tags': tags[image_name]})
+
+        return JsonResponse({'success': False, 'error': 'Tag already exists'}, status=400)
+
+    return JsonResponse({'success': False}, status=400)
