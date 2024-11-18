@@ -26,6 +26,7 @@ urlpatterns = [
     path('images/upload/', views.image_upload, name='image_upload'),
     path('images/check_duplicate/', views.image_check_duplicate, name='image_check_duplicate'),
     path('images/update_tag/', views.update_tag, name='update_tag'),
+    path('add_tag/', views.add_tag, name='add_tag'),  # Thêm dòng này
 ]
 
 # Cung cấp các file media trong môi trường phát triển
