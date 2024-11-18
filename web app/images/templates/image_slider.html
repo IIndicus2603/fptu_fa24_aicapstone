@@ -60,11 +60,20 @@
             justify-content: flex-start;
         }
 
-        .tag-btn {
+        .tag-btn,.tag-add-btn {
             margin: 5px;
             font-size: 14px;
         }
-
+        
+        input[type="text"].form-control {
+            display: inline-block;
+            min-width: 50px;
+            padding: 2px 5px;
+            border: 1px solid #007bff;
+            border-radius: 3px;
+            font-size: 14px;
+            outline: none;
+        }
         .carousel-caption {
             display: none !important;
         }
@@ -141,6 +150,77 @@
             return csrfToken;
         }
 
+        function adjustInputWidth(input) {
+            var text = input.val(); // Lấy nội dung trong ô nhập
+            var tempSpan = $('<span>').text(text).css({
+                visibility: 'hidden', // Ẩn phần tử tạm
+                position: 'absolute', // Đảm bảo không chiếm chỗ
+                fontSize: input.css('font-size'), // Áp dụng font giống ô nhập
+                fontFamily: input.css('font-family'),
+                fontWeight: input.css('font-weight'),
+                whiteSpace: 'pre' // Đảm bảo khoảng trắng được hiển thị chính xác
+            });
+    
+            $('body').append(tempSpan); // Thêm vào DOM để đo chiều rộng
+            var width = tempSpan.width(); // Đo chiều rộng
+            tempSpan.remove(); // Xóa phần tử tạm
+            input.width(Math.max(width + 20, 50)); // Áp dụng chiều rộng (cộng thêm một chút padding nếu cần)
+        }
+
+        $(document).on('click', '#addTagButton', function () {
+            var addButton = $(this);
+            var input = $('<input type="text" class="form-control form-control-sm" placeholder="New Tag">');
+            var tagButtonsContainer = $('#tagButtons');
+
+            // Replace the "+" button with the input field
+            addButton.replaceWith(input);
+            adjustInputWidth(input); // Điều chỉnh chiều rộng ban đầu
+            input.focus();
+    
+            // Adjust the input width dynamically as user types
+            input.on('input', function () {
+                adjustInputWidth($(this));
+            });
+    
+            // Handle Enter key to save the new tag
+            input.on('keypress', function (e) {
+                if (e.which === 13) {
+                    var newTag = input.val().trim();
+                    if (newTag !== '') {
+                        // Replace the input field with a tag button
+                        var newTagButton = $('<button class="btn btn-sm btn-outline-primary tag-btn">' + newTag + '</button>');
+                        input.replaceWith(newTagButton);
+    
+                        // Send AJAX request to add the new tag to the server
+                        var imageName = $('#carouselImages .carousel-item.active img').attr('src'); // Get the current image name
+                        $.ajax({
+                            url: '{% url "add_tag" %}', // Replace with your add_tag URL
+                            type: 'POST',
+                            data: {
+                                image_name: imageName,
+                                new_tag: newTag,
+                                csrfmiddlewaretoken: getCSRFToken(),
+                            },
+                            success: function (response) {
+                                console.log('Tag added successfully:', response);
+                            },
+                            error: function (xhr, status, error) {
+                                alert('Error adding tag!');
+                            },
+                        });
+                    } else {
+                        input.remove(); // Remove the input if no value was entered
+                    }
+                }
+            });
+    
+            // Revert back to "+" button if input loses focus without entering a tag
+            input.on('blur', function () {
+                input.replaceWith(addButton);
+            });
+            tagButtonsContainer.append('<button class="btn btn-sm btn-outline-primary tag-add-btn" id="addTagButton">+</button>');   
+
+        });
         // Function to render the tag buttons
         function renderTagButtons(tags) {
             var tagButtonsContainer = $('#tagButtons');
@@ -150,6 +230,7 @@
                 var tagButton = '<button class="btn btn-sm btn-outline-primary tag-btn">' + tag + '</button>';
                 tagButtonsContainer.append(tagButton);
             });
+            tagButtonsContainer.append('<button class="btn btn-sm btn-outline-primary tag-add-btn" id="addTagButton">+</button>');   
         }
         
         // Set the first image as active on page load and show its tags
@@ -209,37 +290,51 @@
         $(document).on('click', '.tag-btn', function() {
             var currentButton = $(this);
             var currentText = currentButton.text();
-            var imageName = $('#carouselImages .carousel-item.active img').attr('src'); // Get the current image's name
-            // Create an input field to edit the tag
+            var imageName = $('#carouselImages .carousel-item.active img').attr('src'); // Lấy tên ảnh hiện tại
             var input = $('<input type="text" class="form-control form-control-sm" value="' + currentText + '">');
-            currentButton.replaceWith(input); // Replace the button with the input field
-            input.focus();  // Focus on the input field to start editing
-        
+            
+            // Thay thế nút bằng ô nhập liệu
+            currentButton.replaceWith(input);
+            adjustInputWidth(input); // Điều chỉnh chiều rộng ban đầu
+            input.focus();
+
+            // Cập nhật chiều rộng khi nhập liệu
+            input.on('input', function() {
+                adjustInputWidth($(this));
+            });
+
+            // Lưu khi nhấn Enter
             input.on('keypress', function(e) {
                 if (e.which === 13) { // Enter key
                     var newText = input.val().trim();
                     if (newText !== '') {
                         var updatedButton = $('<button class="btn btn-sm btn-outline-primary tag-btn">' + newText + '</button>');
-                        input.replaceWith(updatedButton); // Replace the input with the updated button
-        
-                        // Send updated data to the server to update the tag
+                        input.replaceWith(updatedButton); // Thay thế ô nhập bằng nút mới
+
+                        // Gửi dữ liệu cập nhật đến server qua AJAX
                         $.ajax({
-                            url: '{% url "update_tag" %}',  // Use the URL for updating tags
+                            url: '{% url "update_tag" %}', // URL xử lý cập nhật
                             type: 'POST',
-                            
                             data: {
-                                image_name: imageName,
-                                old_tag: currentText,
-                                new_tag: newText,
+                                image_name: imageName,  // Tên ảnh liên kết với thẻ
+                                old_tag: currentText,  // Tên thẻ cũ
+                                new_tag: newText,      // Tên thẻ mới
                                 csrfmiddlewaretoken: getCSRFToken()
                             },
+                            success: function() {
+                                console.log('Tag updated successfully');
+                            },
+                            error: function() {
+                                alert('Error updating tag.');
+                            }
                         });
                     } else {
-                        input.replaceWith(currentButton); // If the input is empty, revert to original button
+                        input.replaceWith(currentButton); // Nếu nội dung rỗng, quay lại nút cũ
                     }
                 }
             });
-        
+
+            // Quay lại nút cũ khi mất focus mà không lưu
             input.on('blur', function() {
                 input.replaceWith(currentButton); // Revert to original button if focus is lost without pressing Enter
             });
